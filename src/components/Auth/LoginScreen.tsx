@@ -22,7 +22,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <div size={40} className="text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="mt-6 text-3xl font-bold text-center text-slate-800 dark:text-white">
-            SecureVault
+            CipherNook
           </h1>
           <p className="mt-2 text-center text-slate-600 dark:text-slate-300">
             Your secure, offline password manager

@@ -143,7 +143,7 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
       <div className="text-center text-xs text-slate-500 py-4 dark:text-slate-400">
-        <p>SecureVault Password Manager</p>
+        <p>CipherNook Password Manager</p>
         <p className="mt-1">Version 1.0.0 • All data is stored locally</p>
       </div>
     </div>;
