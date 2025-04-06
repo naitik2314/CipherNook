@@ -46,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div size={20} className="text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-xl font-semibold text-slate-800 dark:text-white">
-            SecureVault
+            CipherNook
           </h1>
         </div>
       </div>
