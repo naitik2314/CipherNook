@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center space-x-2">
           <div className="p-2 bg-blue-100 rounded-lg dark:bg-blue-900">
-            <div size={20} className="text-blue-600 dark:text-blue-400" />
+            <div className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-xl font-semibold text-slate-800 dark:text-white">
             CipherNook
