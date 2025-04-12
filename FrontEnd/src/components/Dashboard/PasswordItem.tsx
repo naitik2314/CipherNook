@@ -7,7 +7,7 @@ interface PasswordItemProps {
     username: string;
     website?: string;
     category: string;
-    lastUpdated: string;
+    password: string;
     strength: 'weak' | 'medium' | 'strong';
     favorite: boolean;
   };
@@ -78,8 +78,8 @@ export const PasswordItem: React.FC<PasswordItemProps> = ({
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getStrengthColor(password.strength)}`}>
-            {password.strength.charAt(0).toUpperCase() + password.strength.slice(1)}
+          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getStrengthColor(password.strength || 'weak')}`}>
+            {(password.strength || 'weak').charAt(0).toUpperCase() + (password.strength || 'weak').slice(1)}
           </div>
           <div className="flex space-x-2">
             <button onClick={() => handleCopy('username', password.username)} className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 relative" title="Copy username">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LoginScreen } from './components/Auth/LoginScreen';
 import { Dashboard } from './components/Dashboard/Dashboard';
-export function App() {
+export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const handleLogin = () => {
     setIsAuthenticated(true);
