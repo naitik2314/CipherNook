@@ -43,7 +43,7 @@ init_db()
 
 # Pydantic model for password
 class Password(BaseModel):
-    id: int
+    id: int | None = None  # Make 'id' optional for POST requests
     title: str
     username: str
     website: str | None

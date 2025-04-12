@@ -8,7 +8,7 @@ interface PasswordVaultProps {
   activeCategory: string | null;
 }
 
-interface PasswordEntry {
+export interface PasswordEntry {
   id: string;
   title: string;
   username: string;
@@ -18,6 +18,59 @@ interface PasswordEntry {
   strength: 'weak' | 'medium' | 'strong';
   favorite: boolean;
 }
+
+const AddPasswordModal: React.FC<{ isOpen: boolean; onClose: () => void; onAdd: (password: PasswordEntry) => void }> = ({ isOpen, onClose, onAdd }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    username: '',
+    website: '',
+    category: '',
+    password: '',
+    strength: 'medium',
+    favorite: false,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/passwords', formData);
+      if (response.status === 200) {
+        onAdd(response.data);
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error adding password:', error);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-lg font-semibold mb-4">Add New Password</h2>
+        <input name="title" placeholder="Title" value={formData.title} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <input name="username" placeholder="Username" value={formData.username} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <input name="website" placeholder="Website" value={formData.website} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <input name="category" placeholder="Category" value={formData.category} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <input name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <select name="strength" value={formData.strength} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black">
+          <option value="weak">Weak</option>
+          <option value="medium">Medium</option>
+          <option value="strong">Strong</option>
+        </select>
+        <div className="flex justify-end space-x-2">
+          <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">Add</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const PasswordVault: React.FC<PasswordVaultProps> = ({
   searchTerm,
@@ -38,7 +91,7 @@ export const PasswordVault: React.FC<PasswordVaultProps> = ({
     fetchPasswords();
   }, []);
 
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filter passwords based on search term and active category
   const filteredPasswords = passwords.filter(password => {
@@ -54,6 +107,10 @@ export const PasswordVault: React.FC<PasswordVaultProps> = ({
     } : password));
   };
 
+  const handleAddPassword = (newPassword: PasswordEntry) => {
+    setPasswords([...passwords, newPassword]);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -61,7 +118,7 @@ export const PasswordVault: React.FC<PasswordVaultProps> = ({
           {activeCategory === 'all' || !activeCategory ? 'All Passwords' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
         </h2>
         <div className="flex space-x-2">
-          {/* View toggle buttons would go here */}
+          <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 bg-blue-500 text-white rounded">Add Password</button>
         </div>
       </div>
       {filteredPasswords.length === 0 ? (
@@ -85,6 +142,9 @@ export const PasswordVault: React.FC<PasswordVaultProps> = ({
           </ul>
         </div>
       )}
+      <AddPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddPassword} />
     </div>
   );
 };
+
+export { AddPasswordModal };
