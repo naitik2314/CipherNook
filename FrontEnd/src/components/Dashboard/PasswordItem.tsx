@@ -55,7 +55,7 @@ export const PasswordItem: React.FC<PasswordItemProps> = ({
   };
   // In a real app, this would be the actual password
   const fakePassword = '••••••••••••';
-  return <li className="px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-750 transition-colors duration-150">
+  return <li className="px-4 py-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150">
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0 space-x-3">
           <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700">
