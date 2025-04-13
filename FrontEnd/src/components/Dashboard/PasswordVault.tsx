@@ -117,7 +117,14 @@ export const PasswordVault: React.FC<PasswordVaultProps> = ({
     const fetchPasswords = async () => {
       try {
         const response = await axios.get('http://localhost:8000/passwords');
-        setPasswords(response.data);
+        const decryptedPasswords = response.data.map((password: PasswordEntry) => {
+          // Assuming the backend sends encrypted passwords, decrypt them here
+          return {
+            ...password,
+            password: atob(password.password) // Example decryption using Base64 decoding
+          };
+        });
+        setPasswords(decryptedPasswords);
       } catch (error) {
         console.error('Error fetching passwords:', error);
       }

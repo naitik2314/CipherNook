@@ -58,6 +58,26 @@ CipherNook combines “cipher” (implying strong encryption and security) with 
    npm run dev
    ```
 
+### SQLCipher Setup
+
+To enable database encryption using SQLCipher, follow these steps:
+
+1. Install SQLCipher:
+   - On Windows, download and install SQLCipher from the official website or use a package manager like `choco`.
+   - On Linux, use your package manager (e.g., `apt install sqlcipher`).
+   - On macOS, use Homebrew: `brew install sqlcipher`.
+
+2. Update the backend to use SQLCipher:
+   - Ensure the `PRAGMA key` statement is included in the database connection code.
+   - Replace `your-encryption-key` with a secure key of your choice.
+
+3. Test the setup:
+   - Run the backend and ensure the database is encrypted by attempting to open it with a standard SQLite client (it should fail without the key).
+
+### Frontend Decryption
+
+The frontend automatically decrypts passwords fetched from the backend. Ensure the backend sends encrypted passwords in Base64 format for compatibility.
+
 ### Accessing the Application
 - Open your browser and navigate to `http://localhost:3000` (or the port shown in the terminal).
 

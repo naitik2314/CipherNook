@@ -21,10 +21,12 @@ app.add_middleware(
 app.include_router(router)
 
 db_path = "passwords.db"
+encrypted_db_path = f"file:{db_path}?mode=memory&cache=shared"
 
 # Database initialization
 def init_db():
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(encrypted_db_path, uri=True)
+    conn.execute("PRAGMA key = 'your-encryption-key';")
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS passwords (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +56,8 @@ class Password(BaseModel):
 
 @app.get("/passwords", response_model=List[Password])
 def get_passwords():
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(encrypted_db_path, uri=True)
+    conn.execute("PRAGMA key = 'your-encryption-key';")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM passwords")
     rows = cursor.fetchall()
@@ -79,7 +82,8 @@ def get_passwords():
 
 @app.post("/passwords")
 def add_password(password: Password):
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(encrypted_db_path, uri=True)
+    conn.execute("PRAGMA key = 'your-encryption-key';")
     cursor = conn.cursor()
     cursor.execute(
         "INSERT INTO passwords (title, username, website, category, password, strength, favorite) VALUES (?, ?, ?, ?, ?, ?, ?)",
