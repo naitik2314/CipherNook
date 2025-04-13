@@ -53,8 +53,6 @@ export const PasswordItem: React.FC<PasswordItemProps> = ({
       setTimeout(() => setShowCopiedMessage(null), 1500);
     });
   };
-  // In a real app, this would be the actual password
-  const fakePassword = '••••••••••••';
   return <li className="px-4 py-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150">
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0 space-x-3">
@@ -96,7 +94,7 @@ export const PasswordItem: React.FC<PasswordItemProps> = ({
       </div>
       {isPasswordVisible && <div className="mt-2 pl-10 pr-4">
           <div className="p-2 bg-slate-100 rounded text-sm font-mono dark:bg-slate-700 dark:text-white">
-            {fakePassword}
+            {password.password}
           </div>
         </div>}
     </li>;
