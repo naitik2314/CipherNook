@@ -74,6 +74,35 @@ To enable database encryption using SQLCipher, follow these steps:
 3. Test the setup:
    - Run the backend and ensure the database is encrypted by attempting to open it with a standard SQLite client (it should fail without the key).
 
+### Master Password Setup
+
+The application now includes a master password feature for enhanced security. Follow these steps:
+
+1. **First-Time Setup**:
+   - When you launch the application for the first time, you will be prompted to set a master password.
+   - This password will be required to access your vault.
+
+2. **Updating Master Password**:
+   - Navigate to the Settings page in the application.
+   - Enter your current master password and the new password to update it.
+
+3. **Backend Endpoints**:
+   - `/set_master_password`: Sets the master password for the first time.
+   - `/validate_master_password`: Validates the master password during login.
+   - `/update_master_password`: Updates the master password.
+
+### New Dependencies
+
+The following dependencies were added:
+
+1. **Backend**:
+   - `passlib`: For securely hashing and verifying passwords.
+
+To install the new dependencies, run:
+```bash
+pip install -r requirements.txt
+```
+
 ### Frontend Decryption
 
 The frontend automatically decrypts passwords fetched from the backend. Ensure the backend sends encrypted passwords in Base64 format for compatibility.

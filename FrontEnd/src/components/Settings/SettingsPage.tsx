@@ -1,23 +1,47 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { ShieldIcon, SaveIcon, DownloadIcon, UploadIcon, MoonIcon, SunIcon, RotateCwIcon, TrashIcon, AlertTriangleIcon } from 'lucide-react';
 export const SettingsPage: React.FC = () => {
   const [autoLock, setAutoLock] = useState('5');
   const [theme, setTheme] = useState('system');
   const [masterPasswordUpdated, setMasterPasswordUpdated] = useState(false);
+
   const handleExport = () => {
     // In a real app, this would trigger a secure export process
     alert('In a real app, this would export an encrypted backup of your passwords');
   };
+
   const handleImport = () => {
     // In a real app, this would trigger a secure import process
     alert('In a real app, this would allow you to import passwords from a backup file');
   };
-  const handleMasterPasswordUpdate = (e: React.FormEvent) => {
+
+  const handleMasterPasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would update the master password
-    setMasterPasswordUpdated(true);
-    setTimeout(() => setMasterPasswordUpdated(false), 3000);
+    const currentPassword = (document.getElementById('currentPassword') as HTMLInputElement).value;
+    const newPassword = (document.getElementById('newPassword') as HTMLInputElement).value;
+    const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
+
+    if (newPassword !== confirmPassword) {
+      alert('New password and confirmation do not match.');
+      return;
+    }
+
+    try {
+      const response = await axios.put('http://localhost:8000/update_master_password', {
+        old_password: currentPassword,
+        new_password: newPassword,
+      });
+      if (response.status === 200) {
+        setMasterPasswordUpdated(true);
+        setTimeout(() => setMasterPasswordUpdated(false), 3000);
+      }
+    } catch (error) {
+      console.error('Error updating master password:', error);
+      alert('Failed to update master password. Please check your current password.');
+    }
   };
+
   return <div className="max-w-2xl mx-auto space-y-8">
       <div className="bg-white rounded-lg shadow-md dark:bg-slate-800">
         <div className="p-6">

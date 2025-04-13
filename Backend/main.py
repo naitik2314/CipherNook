@@ -4,6 +4,7 @@ from typing import List
 import sqlite3
 from fastapi.middleware.cors import CORSMiddleware
 from routes import router
+from passlib.hash import bcrypt
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -53,6 +54,35 @@ class Password(BaseModel):
     password: str
     strength: str
     favorite: bool
+
+# Initialize master password storage (in-memory for simplicity; replace with secure storage in production)
+master_password_hash = None
+
+@app.post("/set_master_password")
+def set_master_password(password: str):
+    global master_password_hash
+    if master_password_hash is not None:
+        raise HTTPException(status_code=400, detail="Master password is already set.")
+    master_password_hash = bcrypt.hash(password)
+    return {"message": "Master password set successfully."}
+
+@app.post("/validate_master_password")
+def validate_master_password(password: str):
+    if master_password_hash is None:
+        raise HTTPException(status_code=400, detail="Master password is not set.")
+    if not bcrypt.verify(password, master_password_hash):
+        raise HTTPException(status_code=401, detail="Invalid master password.")
+    return {"message": "Master password validated successfully."}
+
+@app.put("/update_master_password")
+def update_master_password(old_password: str, new_password: str):
+    global master_password_hash
+    if master_password_hash is None:
+        raise HTTPException(status_code=400, detail="Master password is not set.")
+    if not bcrypt.verify(old_password, master_password_hash):
+        raise HTTPException(status_code=401, detail="Invalid current master password.")
+    master_password_hash = bcrypt.hash(new_password)
+    return {"message": "Master password updated successfully."}
 
 @app.get("/passwords", response_model=List[Password])
 def get_passwords():

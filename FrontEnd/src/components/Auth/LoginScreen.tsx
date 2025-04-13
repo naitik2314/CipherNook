@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EyeIcon, EyeOffIcon, FingerprintIcon } from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 interface LoginScreenProps {
   onLogin: () => void;
 }
@@ -19,7 +19,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-lg dark:bg-slate-800">
         <div className="flex flex-col items-center">
           <div className="p-3 bg-blue-100 rounded-full dark:bg-blue-900">
-            <div size={40} className="text-blue-600 dark:text-blue-400" />
+            <div className="text-blue-600 dark:text-blue-400">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+              </svg>
+            </div>
           </div>
           <h1 className="mt-6 text-3xl font-bold text-center text-slate-800 dark:text-white">
             CipherNook
@@ -41,15 +45,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <button type="submit" className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
               Unlock Vault
             </button>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="text-sm">
-              <button type="button" className="flex items-center text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300" onClick={onLogin} // For demo purposes
-            >
-                <FingerprintIcon className="mr-2 h-5 w-5" />
-                Use Biometrics
-              </button>
-            </div>
           </div>
         </form>
         <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
