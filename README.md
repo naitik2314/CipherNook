@@ -28,6 +28,10 @@ CipherNook combines “cipher” (implying strong encryption and security) with 
    ```bash
    python main.py
    ```
+4. Run the backend server using Uvicorn:
+   ```bash
+   uvicorn main:app --reload
+   ```
 
 ### Frontend Setup
 1. Navigate to the `FrontEnd` directory:
@@ -59,6 +63,10 @@ CipherNook can be run offline for enhanced security. Follow these steps:
 3. Start the backend server:
    ```bash
    python main.py
+   ```
+4. Run the backend server using Uvicorn:
+   ```bash
+   uvicorn main:app --reload
    ```
 
 ### Frontend Setup (Offline)
