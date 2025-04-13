@@ -82,16 +82,10 @@ export const PasswordItem: React.FC<PasswordItemProps> = ({
             {(password.strength || 'weak').charAt(0).toUpperCase() + (password.strength || 'weak').slice(1)}
           </div>
           <div className="flex space-x-2">
-            <button onClick={() => handleCopy('username', password.username)} className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 relative" title="Copy username">
-              <CopyIcon size={16} />
-              {showCopiedMessage === 'username' && <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-slate-800 text-white rounded">
-                  Copied!
-                </span>}
-            </button>
             <button onClick={() => setIsPasswordVisible(!isPasswordVisible)} className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300" title={isPasswordVisible ? 'Hide password' : 'Show password'}>
               {isPasswordVisible ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
             </button>
-            <button onClick={() => handleCopy('password', 'actual_password_would_be_here')} className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 relative" title="Copy password">
+            <button onClick={() => handleCopy('password', password.password)} className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 relative" title="Copy password">
               <CopyIcon size={16} />
               {showCopiedMessage === 'password' && <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-slate-800 text-white rounded">
                   Copied!
