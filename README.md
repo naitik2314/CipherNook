@@ -20,15 +20,26 @@ CipherNook combines “cipher” (implying strong encryption and security) with 
    ```bash
    cd Backend
    ```
-2. Install dependencies (if any):
+2. Create a virtual environment (optional but recommended):
+   - Using Python's `venv`:
+     ```bash
+     python -m venv env
+     source env/bin/activate  # On Windows: env\Scripts\activate
+     ```
+   - Using Conda:
+     ```bash
+     conda create -n ciphernook python=3.9
+     conda activate ciphernook
+     ```
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Start the backend server:
+4. Start the backend server:
    ```bash
    python main.py
    ```
-4. Run the backend server using Uvicorn:
+5. Run the backend server using Uvicorn:
    ```bash
    uvicorn main:app --reload
    ```
