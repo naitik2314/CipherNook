@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PasswordItem } from './PasswordItem';
 import { KeyIcon } from 'lucide-react';
+import { PasswordGenerator } from '../Tools/PasswordGenerator';
 
 interface PasswordVaultProps {
   searchTerm: string;
@@ -30,6 +31,14 @@ const AddPasswordModal: React.FC<{ isOpen: boolean; onClose: () => void; onAdd: 
     favorite: false,
   });
 
+  const [useGeneratedPassword, setUseGeneratedPassword] = useState(false); // State to toggle between manual and generated password
+  const [generatedPassword, setGeneratedPassword] = useState(''); // State to store the generated password
+
+  const handleGeneratedPassword = (password: string) => {
+    setGeneratedPassword(password);
+    setFormData({ ...formData, password });
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -57,7 +66,33 @@ const AddPasswordModal: React.FC<{ isOpen: boolean; onClose: () => void; onAdd: 
         <input name="username" placeholder="Username" value={formData.username} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
         <input name="website" placeholder="Website" value={formData.website} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
         <input name="category" placeholder="Category" value={formData.category} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
-        <input name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black" />
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <div className="flex items-center space-x-2">
+            <input
+              name="password"
+              placeholder="Password"
+              value={useGeneratedPassword ? generatedPassword : formData.password}
+              onChange={handleChange}
+              disabled={useGeneratedPassword}
+              className="mb-2 p-2 border rounded w-full text-black"
+            />
+            <button
+              type="button"
+              onClick={() => setUseGeneratedPassword(!useGeneratedPassword)}
+              className="px-3 py-2 bg-blue-500 text-white rounded"
+            >
+              {useGeneratedPassword ? 'Manual' : 'Generate'}
+            </button>
+          </div>
+          {useGeneratedPassword && (
+            <div className="mt-4">
+              <PasswordGenerator
+                onGenerate={(password) => handleGeneratedPassword(password)}
+              />
+            </div>
+          )}
+        </div>
         <select name="strength" value={formData.strength} onChange={handleChange} className="mb-2 p-2 border rounded w-full text-black">
           <option value="weak">Weak</option>
           <option value="medium">Medium</option>

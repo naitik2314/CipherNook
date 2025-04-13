@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { RefreshCwIcon, CopyIcon, CheckIcon, XIcon } from 'lucide-react';
-export const PasswordGenerator: React.FC = () => {
+
+interface PasswordGeneratorProps {
+  onGenerate?: (password: string) => void;
+}
+
+export const PasswordGenerator: React.FC<PasswordGeneratorProps> = ({ onGenerate }) => {
   const [password, setPassword] = useState('');
   const [length, setLength] = useState(16);
   const [includeUppercase, setIncludeUppercase] = useState(true);
@@ -9,14 +14,17 @@ export const PasswordGenerator: React.FC = () => {
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [copied, setCopied] = useState(false);
   const [strength, setStrength] = useState<'weak' | 'medium' | 'strong'>('medium');
+
   // Generate password when options change
   useEffect(() => {
     generatePassword();
   }, [length, includeUppercase, includeLowercase, includeNumbers, includeSymbols]);
+
   // Calculate password strength
   useEffect(() => {
     calculateStrength();
   }, [password]);
+
   const generatePassword = () => {
     let charset = '';
     if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
@@ -33,23 +41,32 @@ export const PasswordGenerator: React.FC = () => {
       newPassword += charset.charAt(Math.floor(Math.random() * charset.length));
     }
     setPassword(newPassword);
+    if (onGenerate) {
+      onGenerate(newPassword);
+    }
   };
+
   const calculateStrength = () => {
     // Simple strength calculation based on length and character types
     let score = 0;
-    if (password.length >= 12) score += 2;else if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 2;
+    else if (password.length >= 8) score += 1;
     if (includeUppercase) score += 1;
     if (includeLowercase) score += 1;
     if (includeNumbers) score += 1;
     if (includeSymbols) score += 1;
-    if (score >= 5) setStrength('strong');else if (score >= 3) setStrength('medium');else setStrength('weak');
+    if (score >= 5) setStrength('strong');
+    else if (score >= 3) setStrength('medium');
+    else setStrength('weak');
   };
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(password).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
   const getStrengthColor = () => {
     switch (strength) {
       case 'weak':
@@ -62,7 +79,9 @@ export const PasswordGenerator: React.FC = () => {
         return 'text-slate-500';
     }
   };
-  return <div className="max-w-2xl mx-auto">
+
+  return (
+    <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-lg shadow-md dark:bg-slate-800">
         <div className="p-6">
           <h2 className="text-xl font-semibold text-slate-800 dark:text-white mb-6">
@@ -73,18 +92,31 @@ export const PasswordGenerator: React.FC = () => {
               {password}
             </div>
             <div className="flex space-x-2">
-              <button onClick={generatePassword} className="p-2 text-slate-500 hover:text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-600">
+              <button
+                onClick={generatePassword}
+                className="p-2 text-slate-500 hover:text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-600"
+              >
                 <RefreshCwIcon size={18} />
               </button>
-              <button onClick={copyToClipboard} className="p-2 text-slate-500 hover:text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-600">
-                {copied ? <CheckIcon size={18} className="text-green-500" /> : <CopyIcon size={18} />}
+              <button
+                onClick={copyToClipboard}
+                className="p-2 text-slate-500 hover:text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-600"
+              >
+                {copied ? (
+                  <CheckIcon size={18} className="text-green-500" />
+                ) : (
+                  <CopyIcon size={18} />
+                )}
               </button>
             </div>
           </div>
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="length" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label
+                  htmlFor="length"
+                  className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                >
                   Password Length: {length}
                 </label>
                 <span className={`text-xs font-medium ${getStrengthColor()}`}>
@@ -93,37 +125,84 @@ export const PasswordGenerator: React.FC = () => {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-xs text-slate-500">8</span>
-                <input id="length" type="range" min="8" max="32" value={length} onChange={e => setLength(parseInt(e.target.value))} className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700" />
+                <input
+                  id="length"
+                  type="range"
+                  min="8"
+                  max="32"
+                  value={length}
+                  onChange={(e) => setLength(parseInt(e.target.value))}
+                  className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700"
+                />
                 <span className="text-xs text-slate-500">32</span>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center">
-                <input id="uppercase" type="checkbox" checked={includeUppercase} onChange={() => setIncludeUppercase(!includeUppercase)} className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400" />
-                <label htmlFor="uppercase" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                <input
+                  id="uppercase"
+                  type="checkbox"
+                  checked={includeUppercase}
+                  onChange={() => setIncludeUppercase(!includeUppercase)}
+                  className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400"
+                />
+                <label
+                  htmlFor="uppercase"
+                  className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                >
                   Include Uppercase (A-Z)
                 </label>
               </div>
               <div className="flex items-center">
-                <input id="lowercase" type="checkbox" checked={includeLowercase} onChange={() => setIncludeLowercase(!includeLowercase)} className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400" />
-                <label htmlFor="lowercase" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                <input
+                  id="lowercase"
+                  type="checkbox"
+                  checked={includeLowercase}
+                  onChange={() => setIncludeLowercase(!includeLowercase)}
+                  className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400"
+                />
+                <label
+                  htmlFor="lowercase"
+                  className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                >
                   Include Lowercase (a-z)
                 </label>
               </div>
               <div className="flex items-center">
-                <input id="numbers" type="checkbox" checked={includeNumbers} onChange={() => setIncludeNumbers(!includeNumbers)} className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400" />
-                <label htmlFor="numbers" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                <input
+                  id="numbers"
+                  type="checkbox"
+                  checked={includeNumbers}
+                  onChange={() => setIncludeNumbers(!includeNumbers)}
+                  className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400"
+                />
+                <label
+                  htmlFor="numbers"
+                  className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                >
                   Include Numbers (0-9)
                 </label>
               </div>
               <div className="flex items-center">
-                <input id="symbols" type="checkbox" checked={includeSymbols} onChange={() => setIncludeSymbols(!includeSymbols)} className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400" />
-                <label htmlFor="symbols" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                <input
+                  id="symbols"
+                  type="checkbox"
+                  checked={includeSymbols}
+                  onChange={() => setIncludeSymbols(!includeSymbols)}
+                  className="h-4 w-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 dark:border-slate-600 dark:focus:ring-blue-400"
+                />
+                <label
+                  htmlFor="symbols"
+                  className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                >
                   Include Symbols (!@#$%^&*)
                 </label>
               </div>
             </div>
-            <button onClick={generatePassword} className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+            <button
+              onClick={generatePassword}
+              className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+            >
               Generate New Password
             </button>
           </div>
@@ -156,5 +235,6 @@ export const PasswordGenerator: React.FC = () => {
           </li>
         </ul>
       </div>
-    </div>;
+    </div>
+  );
 };
